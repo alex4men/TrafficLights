@@ -2,7 +2,7 @@
  * This program is for Makely TrafficLights v1.0,
  * for running them synchroniously in city model
  * and control them from a server.
- * 
+ *
  * Alex Fomenko info@makely.ru
  * Makely.ru (c) 2017
 ***************/
@@ -56,13 +56,13 @@ void setup() {
 
   //configure button on pin 5 as an input and enable the internal pull-up resistor
   pinMode(5, INPUT_PULLUP);
-  
+
   pinMode(voltagePin, INPUT);
   pinMode(redLed, OUTPUT);
   pinMode(yellowLed, OUTPUT);
   pinMode(greenLed, OUTPUT);
 
-  leds_Test(500);
+  leds_Test(250);
 
   int bLevel = battery_level();
   if (bLevel < flatBattLevel) {
@@ -74,12 +74,12 @@ void setup() {
     }
     ESP.deepSleep(0);
   }
-  
+
 
   Serial.printf("Connecting to %s ", ssid);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  
+
   while (WiFi.status() != WL_CONNECTED){
     static byte ledState;
     delay(500);
@@ -89,6 +89,7 @@ void setup() {
   }
   /* switch off led */
   digitalWrite(yellowLed, LOW);
+  digitalWrite(espLed, HIGH);
 
   Serial.println(" connected");
 
@@ -96,22 +97,14 @@ void setup() {
   Udp.begin(localUdpPort);
   Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
 //>
-  
-  /* configure OTA server events */
-  analogWriteRange(1000);
-  analogWrite(espLed,1000);
 
+  /* configure OTA server events */
   ArduinoOTA.onStart([]() { // switch off all the PWMs during upgrade
                       leds_Test(250);
-                        analogWrite(espLed,0);
                   });
-                  
+
   ArduinoOTA.onEnd([]() { // do a fancy thing with our board led at end
-                          for (int i=0;i<30;i++)
-                          {
-                            analogWrite(espLed,(i*100) % 1001);
-                            delay(50);
-                          }
+                          leds_Test(250);
                         });
 
    ArduinoOTA.onError([](ota_error_t error) { ESP.restart(); });
@@ -122,24 +115,20 @@ void setup() {
 //>
 
   swSer.begin(115200);
-  
+
   curTime = millis();
   lastChangeTime = curTime;
   lastTransmitTime = curTime;
   lastBlinkTime = curTime;
-  
+
   // TODO: Add lastPressTime
 }
 
 void loop() {
   ArduinoOTA.handle(); // OTA Code
-  
+
   int stage = 0;
   for(stage = 0; stage < stages; stage ++){
-//    debug
-//    Serial.print("Stage: ");
-//    Serial.println(stage);
-//    
     while(1) {
       curTime = millis();
       transmit(stageCmds[stage]);
@@ -221,7 +210,7 @@ void leds_Test(int ms) { //ms - time to turn LEDs on for test
 }
 
 int battery_level() {
- 
+
   // read the battery level from the ESP8266 analog in pin.
   // analog read level is 10 bit 0-1023 (0V-1V).
   // our 1M & 220K voltage divider takes the max
@@ -229,7 +218,7 @@ int battery_level() {
   // this means our min analog read value should be 580 (3.14V)
   // and the max analog read value should be 774 (4.2V).
   int level = analogRead(A0);
- 
+
   // convert battery level to percent
   level = map(level, 580, 774, 0, 100);
   Serial.print("Battery level: "); Serial.print(level); Serial.println("%");
