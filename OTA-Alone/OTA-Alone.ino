@@ -79,24 +79,29 @@ void setup() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   
-  while (WiFi.status() != WL_CONNECTED){
-    static byte ledState;
-    delay(500);
-    Serial.print(".");
-    ledState = digitalRead(yellowLed);
-    digitalWrite(yellowLed, !ledState);
-  }
-  /* switch off led */
-  digitalWrite(yellowLed, LOW);
+  gotIpEventHandler = WiFi.onStationModeGotIP([](const WiFiEventStationModeGotIP& event)
+  {
+    Serial.print("Station connected, IP: ");
+    Serial.println(WiFi.localIP());
+    leds_Test(300);
+    leds_Test(300);
 
-  Serial.println(" connected");
-
-//< UDP code
-  Udp.begin(localUdpPort);
-  Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
+  //< UDP code
+    Udp.begin(localUdpPort);
+    Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
+  //>
+    /* setup the OTA server */
+    ArduinoOTA.begin();
+    Serial.println("OTA flashing Ready");
 //>
-  
-  /* configure OTA server events */
+  });
+
+  disconnectedEventHandler = WiFi.onStationModeDisconnected([](const WiFiEventStationModeDisconnected& event)
+  {
+    Serial.println("Station disconnected");
+  });
+
+    /* configure OTA server events */
   analogWriteRange(1000);
   analogWrite(espLed,1000);
 
@@ -113,12 +118,9 @@ void setup() {
                           }
                         });
 
-   ArduinoOTA.onError([](ota_error_t error) { ESP.restart(); });
+  ArduinoOTA.onError([](ota_error_t error) { ESP.restart(); });
 
-   /* setup the OTA server */
-   ArduinoOTA.begin();
-   Serial.println("Ready");
-//>
+
 
   swSer.begin(115200);
   
@@ -131,7 +133,9 @@ void setup() {
 }
 
 void loop() {
-  ArduinoOTA.handle(); // OTA Code
+  if(WiFi.status() == WL_CONNECTED){
+    ArduinoOTA.handle(); // OTA Code
+  }
   
   int stage = 0;
   for(stage = 0; stage < stages; stage ++){
@@ -217,6 +221,7 @@ void leds_Test(int ms) { //ms - time to turn LEDs on for test
   digitalWrite(redLed, LOW);
   digitalWrite(yellowLed, LOW);
   digitalWrite(greenLed, LOW);
+  delay(ms);
 }
 
 int battery_level() {
