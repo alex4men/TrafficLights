@@ -35,7 +35,7 @@ byte stage = 0;
 const int transmitInterval = 33, blinkInterval = 500;
 const byte voltagePin = A0, redLed = 4, yellowLed = 0, greenLed = 13;
 
-const int flatBattLevel = 30;
+const int flatBattLevel = 10;
 
 // TODO: Add lastPressTime
 unsigned long curTime = 0, lastChangeTime = 0, lastTransmitTime = 0, lastBlinkTime = 0, startTime = 0;
@@ -129,13 +129,13 @@ void setup() {
 void loop() {
   ArduinoOTA.handle(); // OTA Code
 
-  curTime = millis();
   receiveCmdUdp();
+  curTime = millis();
   transmit(stageCmds[stage]);
   lightsUp(stageCmds[stage]);
   // TODO: Add switching on button Press
-  if ((isStarted) && (curTime - lastChangeTime) > stageIntervals[stage]) {
-    lastChangeTime = curTime;
+  if ((isStarted) && (millis() - lastChangeTime) > stageIntervals[stage]) {
+    lastChangeTime = millis();
     stage = (stage + 1) % stages;
   }
 }
