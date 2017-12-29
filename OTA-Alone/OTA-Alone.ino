@@ -61,7 +61,7 @@ void setup() {
   pinMode(yellowLed, OUTPUT);
   pinMode(greenLed, OUTPUT);
 
-  leds_Test(500);
+  leds_Test(250);
 
   int bLevel = battery_level();
   if (bLevel < flatBattLevel) {
@@ -83,8 +83,7 @@ void setup() {
   {
     Serial.print("Station connected, IP: ");
     Serial.println(WiFi.localIP());
-    leds_Test(300);
-    leds_Test(300);
+    digitalWrite(espLed, HIGH);
 
   //< UDP code
     Udp.begin(localUdpPort);
@@ -101,21 +100,14 @@ void setup() {
     Serial.println("Station disconnected");
   });
 
-    /* configure OTA server events */
-  analogWriteRange(1000);
-  analogWrite(espLed,1000);
+  /* configure OTA server events */
 
   ArduinoOTA.onStart([]() { // switch off all the PWMs during upgrade
                       leds_Test(250);
-                        analogWrite(espLed,0);
                   });
                   
   ArduinoOTA.onEnd([]() { // do a fancy thing with our board led at end
-                          for (int i=0;i<30;i++)
-                          {
-                            analogWrite(espLed,(i*100) % 1001);
-                            delay(50);
-                          }
+                          leds_Test(250);
                         });
 
   ArduinoOTA.onError([](ota_error_t error) { ESP.restart(); });
