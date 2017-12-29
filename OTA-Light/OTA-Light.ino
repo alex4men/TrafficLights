@@ -31,20 +31,22 @@ char  replyPacket[] = "ACK";  // a reply string to send back
 SoftwareSerial swSer(14, 12, false, 256);
 
 const int stages = 5;
+byte stage = 0;
 const int transmitInterval = 33, blinkInterval = 500;
 const byte voltagePin = A0, redLed = 4, yellowLed = 0, greenLed = 13;
 
 const int flatBattLevel = 30;
 
 // TODO: Add lastPressTime
-unsigned long curTime = 0, lastChangeTime = 0, lastTransmitTime = 0, lastBlinkTime = 0;
+unsigned long curTime = 0, lastChangeTime = 0, lastTransmitTime = 0, lastBlinkTime = 0, startTime = 0;
 const int stageIntervals[stages] = {7000, 2000, 4000, 3000, 2000}; //Red, RedYellow, Green, BlinkingGreen, Yellow;
 const byte stageCmds[stages] =     {0, 1, 2, 3, 4};
+const byte startCmd = 83, stopCmd = 79, resetCmd = 82;
+boolean isStarted = false, finishedA = false, finishedB = false;
 
 byte curStage = 0;
 
 boolean greenOn = false;
-byte inByte;
 
 void setup() {
 //< OTA code
@@ -127,19 +129,65 @@ void setup() {
 void loop() {
   ArduinoOTA.handle(); // OTA Code
 
-  int stage = 0;
-  for(stage = 0; stage < stages; stage ++){
-    while(1) {
-      curTime = millis();
-      transmit(stageCmds[stage]);
-      lightsUp(stageCmds[stage]);
-      // TODO: Add switching on button Press
-      if ((curTime - lastChangeTime) > stageIntervals[stage]) {
-        lastChangeTime = curTime;
-        break;
-      }
-      delay(1);
+  curTime = millis();
+  receiveCmdUdp();
+  transmit(stageCmds[stage]);
+  lightsUp(stageCmds[stage]);
+  // TODO: Add switching on button Press
+  if ((isStarted) && (curTime - lastChangeTime) > stageIntervals[stage]) {
+    lastChangeTime = curTime;
+    stage = (stage + 1) % stages;
+  }
+}
+
+void receiveCmdUdp() {
+  int packetSize = Udp.parsePacket();
+  if (packetSize)
+  {
+    // receive incoming UDP packets
+    Serial.printf("Received %d bytes from %s, port %d\n", packetSize, Udp.remoteIP().toString().c_str(), Udp.remotePort());
+    int len = Udp.read(incomingPacket, 255);
+    if (len > 0)
+    {
+      incomingPacket[len] = 0;
     }
+
+    //debug
+    Serial.printf("UDP packet contents: %s\n", incomingPacket);
+    switch (incomingPacket[0]) { // default is the 0'th element
+      case startCmd: //S Start
+        if(!isStarted) {
+          isStarted = true;
+          startTime = millis();
+          lastChangeTime = startTime;
+          stage = 2;
+        }
+        break;
+      case stopCmd: //O Stop
+        if(isStarted) {
+          isStarted = false;
+        }
+        lastChangeTime = startTime;
+        stage = 0;
+        break;
+      case resetCmd: //R Reset
+        if(isStarted) {
+          isStarted = false;
+        }
+        lastChangeTime = startTime;
+        stage = 0;
+        finishedA = false;
+        finishedB = false;
+        break;
+      default: //Error Unknown command
+        Serial.print("E");
+        break;
+    }
+
+    // send back a reply, to the IP address and port we got the packet from
+    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+    Udp.write(replyPacket);
+    Udp.endPacket();
   }
 }
 
