@@ -109,7 +109,7 @@ void loop() {
   Serial.println(digitalRead(carBPin));
 
   if (isStarted) {
-    if (!digitalRead(carAPin)) {
+    if (digitalRead(carAPin)) {
 			if (!finishedA){
         sendCmdUdp(stopA);
         finishedA = true;
@@ -118,7 +118,7 @@ void loop() {
         Serial.println("stopA");
       }
     }
-    if (!digitalRead(carBPin)) {
+    if (digitalRead(carBPin)) {
 			if (!finishedB) {
         sendCmdUdp(stopB);
 				finishedB = true;
@@ -128,6 +128,7 @@ void loop() {
       }
     }
   }
+  delay(10);
 }
 
 void receiveCmdUdp() {
