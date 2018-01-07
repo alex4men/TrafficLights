@@ -5,7 +5,8 @@ except ImportError: # For Python3
     import tkinter as tk
 import time
 from datetime import datetime
-from config import tail
+from config import *
+from SocketServer import UDPServer, BaseRequestHandler
 
 class App():
     def __init__(self):
@@ -56,6 +57,14 @@ class App():
                 self.stop()
             self.root.after(10, self.update_clock)
             print(time.time())
+
+class UDPHandler(BaseRequestHandler):
+    def handle(self):
+        data = self.request[0].strip()
+        socket = self.request[1]
+        print("{}:{} wrote:".format(self.client_address[0], self.client_address[1]))
+        print(data)
+        socket.sendto(data.upper(), self.client_address)
 
 app=App()
 app.root.mainloop()
