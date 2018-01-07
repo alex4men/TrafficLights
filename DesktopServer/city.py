@@ -4,14 +4,11 @@ try:
 except ImportError: # For Python3
     import tkinter as tk
 import time
-# from datetime import time as timeClass
-# from datetime import timedelta
 from datetime import datetime
 
 class App():
     def __init__(self):
-        # self.defLabel = "00:00.00"
-        self.defTime = datetime(1970,1,1,0,4)
+        self.defTime = datetime(1970,1,1,0,4,0)
 
         self.root = tk.Tk() # Main window
         self.root.title("Robotraffic city timer")
@@ -20,7 +17,7 @@ class App():
 
         self.label = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-4], font=('DSEG7Classic-Italic', 240), 
          fg='blue')
-        self.label.pack(fill='x')
+        self.label.pack()
 
         # Buttons
         self.startButton = tk.Button(self.frame, text='START', command=self.start)
@@ -51,11 +48,13 @@ class App():
         if self.isStarted:
             elapsedTime = datetime.utcfromtimestamp(time.time() - self.startTime)
             remainingTime = self.defTime - elapsedTime
-            self.label.configure(text=str(remainingTime)[2:-4])
+            if remainingTime.total_seconds() > 0:
+                self.label.configure(text=str(remainingTime)[2:-4])
+            else:
+                self.label.configure(text="00:00.00")
+                self.stop()
             self.root.after(10, self.update_clock)
             print(time.time())
 
 app=App()
-# print(timeClass.resolution)
-# print(t1.strftime("%M:%S.%f")[:-4])
 app.root.mainloop()
