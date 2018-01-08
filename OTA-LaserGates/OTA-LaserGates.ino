@@ -150,7 +150,6 @@ void receiveCmdUdp() {
         if(!isStarted) {
           isStarted = true;
           serverIP = Udp.remoteIP();
-          serverUdpPort = Udp.remotePort();
         }
         break;
       case stopCmd: //O Stop
