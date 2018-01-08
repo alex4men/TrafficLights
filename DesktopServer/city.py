@@ -1,12 +1,10 @@
-# For Python2 compatibility
-try:
-    import Tkinter as tk
-except ImportError: # For Python3
-    import tkinter as tk
+# Use only with Python 3
+import tkinter as tk
 import time
 from datetime import datetime
 from config import *
-from SocketServer import UDPServer, BaseRequestHandler
+from network import *
+
 
 class App():
     def __init__(self):
@@ -31,20 +29,32 @@ class App():
         self.resetButton = tk.Button(self.frame, text='RESET', command=self.reset)
         self.resetButton.pack(side='left')
 
-        self.isStarted = 0
+        self.isStarted = False
         self.startTime = time.time()
 
     def start(self):
-        self.isStarted = 1
+        self.isStarted = True
         self.startTime = time.time()
         self.update_clock()
+        try:
+            sendUDPmsg(broadcastIP, port, startCmd)
+        except:
+            pass
 
     def stop(self):
-        self.isStarted = 0
+        self.isStarted = False
+        try:
+            sendUDPmsg(broadcastIP, port, stopCmd)
+        except:
+            pass
 
     def reset(self):
-        self.isStarted = 0
+        self.isStarted = False
         self.label.configure(text=self.defTime.strftime("%M:%S.%f")[:-tail])
+        try:
+            sendUDPmsg(broadcastIP, port, resetCmd)
+        except:
+            pass
 
     def update_clock(self):
         if self.isStarted:
@@ -58,13 +68,24 @@ class App():
             self.root.after(10, self.update_clock)
             print(time.time())
 
-class UDPHandler(BaseRequestHandler):
-    def handle(self):
-        data = self.request[0].strip()
-        socket = self.request[1]
-        print("{}:{} wrote:".format(self.client_address[0], self.client_address[1]))
-        print(data)
-        socket.sendto(data.upper(), self.client_address)
+if __name__ == "__main__":
 
-app=App()
-app.root.mainloop()
+    # the public network interface
+    localIP = socket.gethostbyname(socket.gethostname())
+    server = ThreadedUDPServer((localIP, port), ThreadedUDPHandler)
+
+    serverIP, port = server.server_address
+    broadcastIP = str(ipaddress.ip_interface(localIP+'/24').network[-1])
+
+    # Start a thread with the server -- that thread will then start one
+    # more thread for each request
+    server_thread = threading.Thread(target=server.serve_forever)
+    # Exit the server thread when the main thread terminates
+    server_thread.daemon = True
+    server_thread.start()
+    print("Server loop running in thread:", server_thread.name, serverIP, port)
+
+
+
+    app=App()
+    app.root.mainloop()

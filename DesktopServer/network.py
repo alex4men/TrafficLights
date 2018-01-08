@@ -10,7 +10,7 @@ class ThreadedUDPHandler(BaseRequestHandler):
         data = str(self.request[0][:100], 'ascii')
         socket = self.request[1]
         print("[Server]: {}:{} wrote: {}".format(self.client_address[0], self.client_address[1], data))
-        
+
         # cur_thread = threading.current_thread()
         # response = bytes("{}: {}".format(cur_thread.name, data), 'ascii')
         # socket.sendto(response.upper(), self.client_address)
@@ -18,18 +18,16 @@ class ThreadedUDPHandler(BaseRequestHandler):
 class ThreadedUDPServer(ThreadingMixIn, UDPServer):
     pass
 
-def client(ip, port, message):
+def sendUDPmsg(ip, port, message):
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
         # sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # delete
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         print("[Client]: Sending: {}".format(message))
         sock.sendto(bytes(message, 'ascii'), (ip, port))
 
-        # response = str(sock.recv(1024), 'ascii')
-        # print("[Client]: Received: {}".format(response))
+        response = str(sock.recv(1024), 'ascii')
+        print("[Client]: Received: {}".format(response))
 
-def test():
-    print("test")
 
 if __name__ == "__main__":
     PORT = 4210
@@ -50,6 +48,6 @@ if __name__ == "__main__":
     print("Server loop running in thread:", server_thread.name, serverIP, port)
 
     
-    client(broadcastIP, port, "S")
+    sendUDPmsg(broadcastIP, port, "S")
     # client(ip, port, "Hello World 2")
     # client(ip, port, "Hello World 3")
