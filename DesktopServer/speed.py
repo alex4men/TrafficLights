@@ -8,16 +8,20 @@ from network import *
 
 class App():
     def __init__(self):
-        self.defTime = datetime(1970,1,1,0,4,0)
+        self.defTime = datetime(1970,1,1,0,0,0)
 
         self.root = tk.Tk() # Main window
-        self.root.title("Robotraffic city timer")
+        self.root.title("Robotraffic speed timer")
         self.frame = tk.Frame(self.root) # TODO: Add black background
         self.frame.pack(fill='x')
 
-        self.label = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7Classic-Italic', 240), 
+        self.labelA = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7Classic-Italic', 240), 
          fg='blue')
-        self.label.pack()
+        self.labelA.pack()
+
+        self.labelB = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7Classic-Italic', 240), 
+         fg='red')
+        self.labelB.pack()
 
         # Buttons
         self.startButton = tk.Button(self.frame, text='START', command=self.start)
@@ -30,10 +34,14 @@ class App():
         self.resetButton.pack(side='left')
 
         self.isStarted = False
+        self.isFinishedA = False
+        self.isFinishedB = False
         self.startTime = time.time()
 
     def start(self):
         self.isStarted = True
+        self.isFinishedA = False
+        self.isFinishedB = False
         self.startTime = time.time()
         self.update_clock()
         try:
@@ -50,23 +58,21 @@ class App():
 
     def reset(self):
         self.isStarted = False
-        self.label.configure(text=self.defTime.strftime("%M:%S.%f")[:-tail])
+        self.labelA.configure(text=self.defTime.strftime("%M:%S.%f")[:-tail])
+        self.labelB.configure(text=self.defTime.strftime("%M:%S.%f")[:-tail])
         try:
             sendUDPmsg(broadcastIP, port, resetCmd)
         except:
             pass
 
     def update_clock(self):
-        if self.isStarted:
+        if self.isStarted and (not self.isFinishedA or not self.isFinishedB):
             elapsedTime = datetime.utcfromtimestamp(time.time() - self.startTime)
-            remainingTime = self.defTime - elapsedTime
-            if remainingTime.total_seconds() > 0:
-                self.label.configure(text=str(remainingTime)[2:-tail])
-            else:
-                self.label.configure(text="00:00.00")
-                self.stop()
-            self.root.after(10, self.update_clock)
-            print(time.time())
+            if not self.isFinishedA:
+                self.labelA.configure(text=elapsedTime.strftime("%M:%S.%f")[:-tail])
+            if not self.isFinishedB:
+                self.labelB.configure(text=elapsedTime.strftime("%M:%S.%f")[:-tail])
+            self.root.after(10, self.update_clock) # Add function call in schedule queue
 
 if __name__ == "__main__":
 
