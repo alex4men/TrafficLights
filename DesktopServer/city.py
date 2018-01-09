@@ -66,7 +66,6 @@ class App():
                 self.label.configure(text="00:00.00")
                 self.stop()
             self.root.after(10, self.update_clock)
-            print(time.time())
 
 if __name__ == "__main__":
 
