@@ -5,10 +5,15 @@ import threading
 import ipaddress
 
 class ThreadedUDPHandler(BaseRequestHandler):
+    def __init__(self, callback, *args, **keys): # Need a Factory to pass this class with a callback in UDPServer instance
+        self.callback = callback
+        BaseRequestHandler.__init__(self, *args, **keys)
+
     def handle(self):
         data = str(self.request[0][:100], 'ascii')
         socket = self.request[1]
         print("[Server]: {}:{} wrote: {}".format(self.client_address[0], self.client_address[1], data))
+        self.callback(data)
 
 
 class ThreadedUDPServer(ThreadingMixIn, UDPServer):
@@ -23,12 +28,22 @@ def sendUDPmsg(ip, port, message):
         sock.sendto(bytes(message, 'ascii'), (ip, port))
 
 
+def handlerFactoryMethod(callback):
+    def createHandler(*args, **keys):
+        return ThreadedUDPHandler(callback, *args, **keys)
+    return createHandler
+
+
 if __name__ == "__main__":
     PORT = 4210
     HOST = ''
     # the public network interface
     localIP = socket.gethostbyname(socket.gethostname())
-    server = ThreadedUDPServer((HOST, PORT), ThreadedUDPHandler)
+
+    def test(data):
+        print(data)
+
+    server = ThreadedUDPServer((HOST, PORT), handlerFactoryMethod(test))
 
     serverIP, port = server.server_address
     broadcastIP = str(ipaddress.ip_interface(localIP+'/24').network[-1])
@@ -40,5 +55,5 @@ if __name__ == "__main__":
     server_thread.daemon = True
     server_thread.start()
     print("Server loop running in thread:", server_thread.name, serverIP, port)
-    
+
     sendUDPmsg(broadcastIP, port, "S")
