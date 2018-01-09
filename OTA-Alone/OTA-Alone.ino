@@ -22,7 +22,7 @@ WiFiEventHandler gotIpEventHandler, disconnectedEventHandler;
 
 //< UDP code
 WiFiUDP Udp;
-unsigned int localUdpPort = 4210;  // local port to listen on
+unsigned int port = 4210;  // local port to listen on and to reply
 char incomingPacket[255];  // buffer for incoming packets
 char  replyPacket[] = "ACK";  // a reply string to send back
 //>
@@ -86,8 +86,8 @@ void setup() {
     digitalWrite(espLed, HIGH);
 
     //< UDP code
-    Udp.begin(localUdpPort);
-    Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
+    Udp.begin(port);
+    Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), port);
     //>
 
     /* setup the OTA server */

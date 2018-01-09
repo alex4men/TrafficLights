@@ -18,11 +18,10 @@ const byte espLed = 2; // ESP built-in LED
 //>
 
 IPAddress serverIP(192, 168, 0, 255);
-int serverUdpPort = 4210;
 
 //< UDP code
 WiFiUDP Udp;
-unsigned int localUdpPort = 4210;  // local port to listen on
+unsigned int port = 4210;  // local port to listen on and to reply
 char incomingPacket[255];  // buffer for incoming packets
 char  replyPacket[] = "ACK";  // a reply string to send back
 //>
@@ -77,8 +76,8 @@ void setup() {
   Serial.println(" connected");
 
 //< UDP code
-  Udp.begin(localUdpPort);
-  Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
+  Udp.begin(port);
+  Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), port);
 //>
 
   /* configure OTA server events */
@@ -169,11 +168,9 @@ void receiveCmdUdp() {
         break;
     }
 
-    // send back a reply, to the IP address and port we got the packet from
-    Udp.beginPacket(Udp.remoteIP(), Udp.remotePort());
+    // send back a reply, to the IP address we got the packet from and standart port
+    Udp.beginPacket(Udp.remoteIP(), port);
     Udp.write(replyPacket);
-    Udp.write(digitalRead(carAPin));
-    Udp.write(digitalRead(carBPin));
     Udp.endPacket();
   }
 }
@@ -201,8 +198,8 @@ int battery_level() {
 }
 
 void sendCmdUdp(byte message) {
-  // send back a reply, to the IP address and port we got the packet from
-  Udp.beginPacket(serverIP, serverUdpPort);
+  // msg to the IP address we got the packet from and standart port
+  Udp.beginPacket(serverIP, port);
   Udp.write(message);
   Udp.endPacket();
 }
