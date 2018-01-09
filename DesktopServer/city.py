@@ -68,10 +68,12 @@ class App():
             self.root.after(10, self.update_clock)
 
 if __name__ == "__main__":
+   
+    app=App()
 
     # the public network interface
     localIP = socket.gethostbyname(socket.gethostname())
-    server = ThreadedUDPServer((localIP, port), ThreadedUDPHandler)
+    server = ThreadedUDPServer((localIP, port), handlerFactoryMethod(None))
 
     serverIP, port = server.server_address
     broadcastIP = str(ipaddress.ip_interface(localIP+'/24').network[-1])
@@ -85,6 +87,4 @@ if __name__ == "__main__":
     print("Server loop running in thread:", server_thread.name, serverIP, port)
 
 
-
-    app=App()
     app.root.mainloop()
