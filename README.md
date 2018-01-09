@@ -10,6 +10,7 @@
 ---
 
 Это репозиторий для прошивок светофоров [Makely Traffic Light v2](makely.ru/traffic-light) ![image3]
+
 и лазерных ворот [Makely Laser Gate v2](makely.ru/laser-gate). ![image4]
 
 
