@@ -15,7 +15,7 @@ class App():
         self.frame = tk.Frame(self.root) # TODO: Add black background
         self.frame.pack(fill='x')
 
-        self.label = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7Classic-Italic', 240), 
+        self.label = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', 240), 
          fg='blue')
         self.label.pack()
 

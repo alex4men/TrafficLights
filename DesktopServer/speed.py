@@ -15,11 +15,11 @@ class App():
         self.frame = tk.Frame(self.root) # TODO: Add black background
         self.frame.pack(fill='x')
 
-        self.labelA = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7Classic-Italic', 240), 
+        self.labelA = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', 240), 
          fg='blue')
         self.labelA.pack()
 
-        self.labelB = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7Classic-Italic', 240), 
+        self.labelB = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', 240), 
          fg='red')
         self.labelB.pack()
 
