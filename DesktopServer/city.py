@@ -59,9 +59,9 @@ class App():
     def update_clock(self):
         if self.isStarted:
             elapsedTime = datetime.utcfromtimestamp(time.time() - self.startTime)
-            remainingTime = self.defTime - elapsedTime
+            remainingTime = self.defTime - elapsedTime # datetime.timedelta object
             if remainingTime.total_seconds() > 0:
-                self.label.configure(text=str(remainingTime)[2:-tail])
+                self.label.configure(text=str(remainingTime)[2:-tail]) # remove "0:" from the beginning and 4 microseconds digits
             else:
                 self.label.configure(text="00:00.00")
                 self.stop()
