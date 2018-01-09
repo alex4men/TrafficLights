@@ -65,6 +65,13 @@ class App():
         except:
             pass
 
+    def msgCallbackHandler(self, data):
+        if data == aFinished:
+            self.isFinishedA = True
+        elif data == bFinished:
+            self.isFinishedB = True
+        print("[App]: " + data)
+
     def update_clock(self):
         if self.isStarted and (not self.isFinishedA or not self.isFinishedB):
             elapsedTime = datetime.utcfromtimestamp(time.time() - self.startTime)
@@ -76,9 +83,11 @@ class App():
 
 if __name__ == "__main__":
 
+    app=App()
+
     # the public network interface
     localIP = socket.gethostbyname(socket.gethostname())
-    server = ThreadedUDPServer((localIP, port), ThreadedUDPHandler)
+    server = ThreadedUDPServer((localIP, port), handlerFactoryMethod(app.msgCallbackHandler))
 
     serverIP, port = server.server_address
     broadcastIP = str(ipaddress.ip_interface(localIP+'/24').network[-1])
@@ -92,6 +101,4 @@ if __name__ == "__main__":
     print("Server loop running in thread:", server_thread.name, serverIP, port)
 
 
-
-    app=App()
     app.root.mainloop()
