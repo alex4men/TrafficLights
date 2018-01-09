@@ -5,7 +5,7 @@ import threading
 import ipaddress
 
 class ThreadedUDPHandler(BaseRequestHandler):
-    def __init__(self, callback, *args, **keys): # Need a Factory to pass this class with a callback in UDPServer instance
+    def __init__(self, callback=None, *args, **keys): # Need a Factory to pass this class with a callback in UDPServer instance
         self.callback = callback
         BaseRequestHandler.__init__(self, *args, **keys)
 
@@ -13,7 +13,10 @@ class ThreadedUDPHandler(BaseRequestHandler):
         data = str(self.request[0][:100], 'ascii')
         socket = self.request[1]
         print("[Server]: {}:{} wrote: {}".format(self.client_address[0], self.client_address[1], data))
-        self.callback(data)
+        try:
+            self.callback(data)
+        except:
+            pass
 
 
 class ThreadedUDPServer(ThreadingMixIn, UDPServer):
