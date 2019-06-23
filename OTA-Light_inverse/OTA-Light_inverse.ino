@@ -14,8 +14,8 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-const char* ssid = "TP-LINK_39D0";
-const char* password = "50239948";
+const char* ssid = "Robotraffic";
+const char* password = "Robotraffic";
 const byte espLed = 2; // ESP built-in LED
 //>
 
@@ -96,8 +96,8 @@ void setup() {
   Serial.println(" connected");
 
 //< UDP code
-  Udp.begin(localUdpPort);
-  Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), localUdpPort);
+  Udp.begin(port);
+  Serial.printf("Now listening at IP %s, UDP port %d\n", WiFi.localIP().toString().c_str(), port);
 //>
 
   /* configure OTA server events */

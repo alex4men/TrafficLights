@@ -13,8 +13,8 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-const char* ssid = "TP-LINK_39D0";
-const char* password = "50239948";
+const char* ssid = "City";
+const char* password = "robotrafficTomsk";
 const byte espLed = 2; // ESP built-in LED
 //>
 
@@ -37,7 +37,7 @@ const int flatBattLevel = 30;
 
 // TODO: Add lastPressTime
 unsigned long curTime = 0, lastChangeTime = 0, lastTransmitTime = 0, lastBlinkTime = 0;
-const byte stageCmds[stages] =     {6}; // 6 - для стоп сигнала, 5 - для пешеходного перехода
+const byte stageCmds[stages] =     {5}; // 6 - для стоп сигнала, 5 - для пешеходного перехода
 
 byte curStage = 0;
 

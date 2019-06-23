@@ -8,7 +8,7 @@ from network import *
 
 class App():
     def __init__(self):
-        self.defTime = datetime(1970,1,1,0,4,0)
+        self.defTime = datetime(1970,1,1,0,2,30)
 
         self.root = tk.Tk() # Main window
         self.root.title("Robotraffic city timer")
