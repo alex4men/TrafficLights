@@ -13,8 +13,8 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-const char* ssid = "City";
-const char* password = "robotrafficTomsk";
+const char* ssid = "Robotraffic-city";
+const char* password = "Robotraffic-city";
 const byte espLed = 2; // ESP built-in LED
 //>
 
@@ -37,7 +37,7 @@ const int flatBattLevel = 30;
 
 // TODO: Add lastPressTime
 unsigned long curTime = 0, lastChangeTime = 0, lastTransmitTime = 0, lastBlinkTime = 0;
-const byte stageCmds[stages] =     {5}; // 6 - для стоп сигнала, 5 - для пешеходного перехода
+const byte stageCmds[stages] =     {6}; // 6 - для стоп сигнала, 5 - для пешеходного перехода
 
 byte curStage = 0;
 
@@ -65,9 +65,9 @@ void setup() {
   int bLevel = battery_level();
   if (bLevel < flatBattLevel) {
     for(int i = 0; i < 3; i++){
-      digitalWrite(redLed, HIGH);
+      digitalWrite(espLed, HIGH);
       delay(500);
-      digitalWrite(redLed, LOW);
+      digitalWrite(espLed, LOW);
       delay(500);
     }
     ESP.deepSleep(0);
