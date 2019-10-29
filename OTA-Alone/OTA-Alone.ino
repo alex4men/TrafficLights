@@ -11,18 +11,13 @@
 SoftwareSerial swSer(14, 12, false, 256);
 
 const int stages = 5;
-//const int stages = 1;
 const int transmitInterval = 33, blinkInterval = 500;
 const byte voltagePin = A0, redLed = 4, yellowLed = 0, greenLed = 13;
 const int flatBattLevel = 30;
 
-// TODO: Add lastPressTime
 unsigned long curTime = 0, lastChangeTime = 0, lastTransmitTime = 0, lastBlinkTime = 0;
 const int stageIntervals[stages] = {7000, 2000, 4000, 3000, 2000}; //Red, RedYellow, Green, BlinkingGreen, Yellow;
-//const int stageIntervals[stages] = {1000, 1000, 1000, 1000, 1000}; //Red, RedYellow, Green, BlinkingGreen, Yellow;
-//const int stageIntervals[stages] = {7000}; //Red, RedYellow, Green, BlinkingGreen, Yellow;
 const byte stageCmds[stages] =     {0, 1, 2, 3, 4};
-//const byte stageCmds[stages] =     {3};
 
 int buttonPin = 5;
 
@@ -51,8 +46,6 @@ void setup() {
   lastChangeTime = curTime;
   lastTransmitTime = curTime;
   lastBlinkTime = curTime;
-  
-  // TODO: Add lastPressTime
 
   int bLevel = battery_level();
   // if (bLevel < flatBattLevel) {
@@ -75,7 +68,7 @@ void loop() {
       curTime = millis();
       transmit(stageCmds[stage]);
       lightsUp(stageCmds[stage]);
-      // TODO: Add switching on button Press
+      // Switching on button Press
       isButtonPressed = !(digitalRead(buttonPin));
 //      Serial.print(isButtonPressed);
       
