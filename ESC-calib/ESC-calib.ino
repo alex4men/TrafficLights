@@ -1,6 +1,6 @@
 #include <Servo.h>
 
-const byte motorPin = 3;
+const byte motorPin = 47;
 
 Servo motor;
 
