@@ -14,8 +14,9 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-const char* ssid = "Robotraffic";
-const char* password = "Robotraffic";
+const char* ssid = "Robotraffic-city";
+const char* password = "Robotraffic-city";
+
 const byte espLed = 2; // ESP built-in LED
 //>
 
