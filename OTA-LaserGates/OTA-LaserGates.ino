@@ -12,8 +12,8 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-const char* ssid = "Robotraffic";
-const char* password = "Robotraffic";
+const char* ssid = "Robotraffic-speed";
+const char* password = "Robotraffic-speed";
 const byte espLed = 2; // ESP built-in LED
 //>
 
@@ -102,10 +102,10 @@ void loop() {
 
   receiveCmdUdp();
   //debug
-  Serial.print("A: ");
-  Serial.print(digitalRead(carAPin));
-  Serial.print(" B: ");
-  Serial.println(digitalRead(carBPin));
+//  Serial.print("A: ");
+//  Serial.print(digitalRead(carAPin));
+//  Serial.print(" B: ");
+//  Serial.println(digitalRead(carBPin));
 
   if (isStarted) {
     if (digitalRead(carAPin)) {
