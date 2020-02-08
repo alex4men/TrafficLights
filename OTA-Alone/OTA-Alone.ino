@@ -8,7 +8,7 @@
 //Red, RedYellow, Green, BlinkingGreen, Yellow -> 0, 1, 2, 3, 4
 #include <SoftwareSerial.h>
 
-SoftwareSerial swSer(14, 12, false, 256);
+SoftwareSerial swSer(14, 12);
 
 const int stages = 5;
 const int transmitInterval = 33, blinkInterval = 500;

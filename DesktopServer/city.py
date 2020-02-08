@@ -72,7 +72,7 @@ if __name__ == "__main__":
     app=App()
 
     # the public network interface
-    localIP = socket.gethostbyname(socket.gethostname())
+    localIP = socket.gethostbyname(socket.gethostname()) # enter IP manually, if automatic doesn't work
     server = ThreadedUDPServer((localIP, port), handlerFactoryMethod(None))
 
     serverIP, port = server.server_address

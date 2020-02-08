@@ -29,11 +29,11 @@ char incomingPacket[255];  // buffer for incoming packets
 char  replyPacket[] = "ACK";  // a reply string to send back
 //>
 
-SoftwareSerial swSer(14, 12, false, 256);
+SoftwareSerial swSer(14, 12);
 
 const int stages = 5;
 byte stage = 0;
-const int transmitInterval = 33, blinkInterval = 500;
+const int transmitInterval = 70, blinkInterval = 500;
 const byte voltagePin = A0, redLed = 4, yellowLed = 0, greenLed = 13;
 
 const int flatBattLevel = 10;

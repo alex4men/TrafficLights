@@ -1,6 +1,5 @@
 /*************
- * This program is for Makely TrafficLights v1.0,
- * for running them independently.
+ * This program is for Makely Stop Sign v1.0.
  *
  * Alex Fomenko info@makely.ru
  * Makely.ru (c) 2017
@@ -27,10 +26,10 @@ char incomingPacket[255];  // buffer for incoming packets
 char  replyPacket[] = "ACK";  // a reply string to send back
 //>
 
-SoftwareSerial swSer(14, 12, false, 256);
+SoftwareSerial swSer(14, 12);
 
 const int stages = 1;
-const int transmitInterval = 33, blinkInterval = 500;
+const int transmitInterval = 70, blinkInterval = 500;
 const byte voltagePin = A0, redLed = 4, yellowLed = 0, greenLed = 13;
 
 const int flatBattLevel = 30;
