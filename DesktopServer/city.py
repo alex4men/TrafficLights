@@ -13,21 +13,25 @@ class App():
         self.root = tk.Tk() # Main window
         self.root.title("Robotraffic city timer")
         self.frame = tk.Frame(self.root) # TODO: Add black background
-        self.frame.pack(fill='x')
-
-        self.label = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', 240), 
-         fg='blue')
-        self.label.pack()
+        self.frame.pack(fill='both', expand='yes')
 
         # Buttons
-        self.startButton = tk.Button(self.frame, text='START', command=self.start)
-        self.startButton.pack(side='left')
+        self.buttonsFrame = tk.Frame(self.frame)
+        self.buttonsFrame.pack(fill='x', expand='no')
 
-        self.stopButton = tk.Button(self.frame, text='STOP', command=self.stop)
-        self.stopButton.pack(side='left')
+        self.startButton = tk.Button(self.buttonsFrame, text='START', command=self.start)
+        self.startButton.pack(side='left', fill='both', expand='yes')
 
-        self.resetButton = tk.Button(self.frame, text='RESET', command=self.reset)
-        self.resetButton.pack(side='left')
+        self.stopButton = tk.Button(self.buttonsFrame, text='STOP', command=self.stop)
+        self.stopButton.pack(side='left', fill='both', expand='yes')
+
+        self.resetButton = tk.Button(self.buttonsFrame, text='RESET', command=self.reset)
+        self.resetButton.pack(side='left', fill='both', expand='yes')
+
+        # Digits
+        self.label = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', 240),
+         fg='blue')
+        self.label.pack(expand='yes')
 
         self.isStarted = False
         self.startTime = time.time()
