@@ -151,27 +151,24 @@ void loop() {
   
   switch (shlackbaum_state)
   {
-    case 1:
-      
-
+    case 1: // Shlackbaum is raised
       if (dV > threshold) { // enter next shlackbaum_state and save current time
         shlackbaum_state = 2;
         digitalWrite(13, !digitalRead(13));
         lastShlackTime = millis();
-        outVal = 180;
-        myservo.write(outVal);
+        outVal = 2550;
+        myservo.writeMicroseconds(outVal);
         delay(500);
       }
 
 
       break;
-    case 2:
+    case 2: // Close the gates
       if (curTime - lastShlackTime > shlackbaum_delay) { //check if time has passed
         shlackbaum_state = 1;
         digitalWrite(13, !digitalRead(13));
-        outVal = 80;
-        
-        myservo.write(outVal);
+        outVal = 1300;
+        myservo.writeMicroseconds(outVal);
         delay(500);
       }
       break;
