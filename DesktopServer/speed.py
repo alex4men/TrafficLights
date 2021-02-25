@@ -11,7 +11,14 @@ class App():
         self.defTime = datetime(1970,1,1,0,0,0)
 
         self.root = tk.Tk() # Main window
+        # getting screen width and height of display 
+        width= self.root.winfo_screenwidth()  
+        height= self.root.winfo_screenheight() 
+        # setting tkinter window size 
+        self.root.geometry("%dx%d" % (width, height))
         self.root.title("Robotraffic speed timer")
+
+        # Base inner frame
         self.frame = tk.Frame(self.root) # TODO: Add black background
         self.frame.pack(fill='both', expand='yes')
 
