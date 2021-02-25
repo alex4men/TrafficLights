@@ -36,11 +36,11 @@ class App():
         self.resetButton.pack(side='left', fill='both', expand='yes')
 
         # Digits
-        self.labelA = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', 240),
+        self.labelA = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', width//5),
          fg='blue')
         self.labelA.pack(expand='yes')
 
-        self.labelB = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', 240),
+        self.labelB = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', width//5),
          fg='red')
         self.labelB.pack(expand='yes')
 

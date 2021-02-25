@@ -36,7 +36,7 @@ class App():
         self.resetButton.pack(side='left', fill='both', expand='yes')
 
         # Digits
-        self.label = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', 240),
+        self.label = tk.Label(self.frame, text=self.defTime.strftime("%M:%S.%f")[:-tail], font=('DSEG7 Classic-Italic', width//5),
          fg='blue')
         self.label.pack(expand='yes')
 
