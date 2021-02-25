@@ -12,8 +12,8 @@ class App():
 
         self.root = tk.Tk() # Main window
         # getting screen width and height of display 
-        width= self.root.winfo_screenwidth()  
-        height= self.root.winfo_screenheight() 
+        width = self.root.winfo_screenwidth()
+        height = self.root.winfo_screenheight()
         # setting tkinter window size 
         self.root.geometry("%dx%d" % (width, height))
         self.root.title("Robotraffic speed timer")
