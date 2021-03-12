@@ -2,7 +2,7 @@
 import tkinter as tk
 import time
 from datetime import datetime
-from config import *
+from constants import *
 from network import *
 
 

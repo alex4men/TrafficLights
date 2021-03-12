@@ -2,13 +2,15 @@
 import tkinter as tk
 import time
 from datetime import datetime
-from config import *
+from constants import *
 from network import *
+import confuse
+import argparse
 
 
 class App():
-    def __init__(self):
-        self.defTime = datetime(1970,1,1,0,2,30)
+    def __init__(self, minutes, seconds):
+        self.defTime = datetime(1970, 1, 1, 0, minutes, seconds)
 
         self.root = tk.Tk() # Main window
         # getting screen width and height of display 
@@ -79,8 +81,23 @@ class App():
             self.root.after(10, self.update_clock)
 
 if __name__ == "__main__":
-   
-    app=App()
+
+    # Deal with the configuration
+    config = confuse.Configuration('app')
+    config.set_file('config.yaml')
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--minutes', help='minutes for the countdown timer')
+    parser.add_argument('--seconds', help='seconds for the countdown timer')
+    args = parser.parse_args()
+
+    # Override config from the file with command line arguments
+    config.set_args(args)
+    minutes = int(config['minutes'].get())
+    seconds = int(config['seconds'].get())
+
+    # Create an app instance
+    app=App(minutes, seconds)
 
     # the public network interface
     localIP = socket.gethostbyname(socket.gethostname()) # enter IP manually, if automatic doesn't work

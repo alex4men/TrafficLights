@@ -1,0 +1,4 @@
+# python 3.8
+pyinstaller
+# pyinstaller --onefile -w city.py
+# where -w is for windowed mode without a console
