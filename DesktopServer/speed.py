@@ -92,6 +92,9 @@ class App():
                 self.labelB.configure(text=elapsedTime.strftime("%M:%S.%f")[:-tail])
             self.root.after(10, self.update_clock) # Add function call in schedule queue
 
+    def update_window_title(self, new_title):
+        self.root.title(new_title)
+
 if __name__ == "__main__":
 
     app=App()
@@ -111,6 +114,6 @@ if __name__ == "__main__":
     server_thread.daemon = True
     server_thread.start()
     print("Server loop running in thread:", server_thread.name, serverIP, port)
-
+    app.update_window_title("Robotraffic speed timer " + str(serverIP))
 
     app.root.mainloop()
